@@ -37,7 +37,26 @@ function displayWord() {
 }
 
 function updateWrongLettersEl() {
+    wrongLettersEl.innerHTML = `
+        ${wrongLetters.length > 0? '<p>Wrong</p>' : ''}
+        ${wrongLetters.map(letter => `<span>${letter}</span>`)}
+    `;
 
+    figureParts.forEach((part, idx) => {
+        const errors = wrongLetters.length;
+
+        if (idx < errors) {
+            part.style.display = 'block';
+        } else {
+            part.style.display = 'none';
+        }
+
+    });
+
+    if (wrongLetters.length === figureParts.length) {
+        finalMessage.innerText = 'Unfortunately you have lost!';
+        popup.style.display = 'flex';
+    }
 }
 
 function showNotification() {
@@ -70,5 +89,16 @@ window.addEventListener('keydown', e => {
         }
     }
 })
+
+playAgainBtn.addEventListener('click', () => {
+    correctLetters.splice(0);
+    wrongLetters.splice(0);
+
+    selectedWord = words[Math.floor(Math.random()* words.length)];
+    displayWord();
+
+    updateWrongLettersEl();
+    popup.style.display = 'none';
+});
 
 displayWord();
